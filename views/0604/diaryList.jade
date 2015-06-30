@@ -1,0 +1,109 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    |     
+    title &#x8FB2;&#x696D;&#x30E2;&#x30CB;&#x30BF;&#x30EA;&#x30F3;&#x30B0;&#x30B5;&#x30FC;&#x30D3;&#x30B9; &#x30E2;&#x30C3;&#x30AF;&#x30A2;&#x30C3;&#x30D7; - V0
+    |     
+    link(href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css', rel='stylesheet')
+    |     
+    link(href='http://cdn.jtsage.com/datebox/1.4.5/jqm-datebox-1.4.5.min.css', rel='stylesheet')
+    |     
+    script(src='http://code.jquery.com/jquery-1.9.1.min.js')
+    |     
+    script(src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js', type='text/javascript')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1 user-scalable=no maximum-scale=1')
+  |   
+  body
+    // 日誌一覧
+    #page_diaryList(data-role='page')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') &#x623B;&#x308B;
+        |         
+        h1 &#x65E5;&#x8A8C;
+        |         
+        a(href='diary.html', data-role='button') &#x767B;&#x9332;
+      |       
+      .ui-content(role='main')
+        .ui-field-contain
+          label(data-inline='true') &#x8868;&#x793A;&#x958B;&#x59CB;&#x65E5;&#xFF1A;
+          |           
+          input(type='date', data-role='datebox', data-options='{"mode":"calbox"}', data-inline='true')
+        |         
+        ul(data-role='listview', data-inset='true', data-divider-theme='d')
+          li(data-role='list-divider')
+            | 2015/3
+          |           
+          li
+            a(href='diary1')
+              h3 2015-03-01
+              |             
+              p &#x65E5;&#x8A8C;&#x3092;&#x4ED8;&#x3051;&#x59CB;&#x3081;&#x308B;
+              |             
+              p.ui-li-aside &#x6674;&#x308C; 18&#x2103;
+          |           
+          li
+            a(href='diary1')
+              h3 2015-03-02
+              |             
+              p CO2&#x4F4E;&#x4E0B;&#x306E;&#x305F;&#x3081;&#x88DC;&#x586B;
+              |             
+              p.ui-li-aside &#x6674;&#x308C;&#x6642;&#x3005;&#x66C7;&#x308A; 15&#x2103;
+          |           
+          li
+            a(href='diary2')
+              h3 2015-03-03
+              |             
+              p &#x6E7F;&#x5EA6;&#x304C;90%&#x3092;&#x8D85;&#x3048;&#x305F;&#x305F;&#x3081;&#x3001;&#x63DB;&#x6C17;&#x30D5;&#x30A1;&#x30F3;&#x3092;1&#x6642;&#x9593;ON
+              |             
+              p.ui-li-aside &#x66C7;&#x308A; 17&#x2103;
+          |           
+          li
+            a(href='diary3')
+              h3 2015-03-06
+              |             
+              p &#x6E7F;&#x5EA6;&#x304C;90%&#x3092;&#x8D85;&#x3048;&#x305F;&#x305F;&#x3081;&#x3001;&#x63DB;&#x6C17;&#x30D5;&#x30A1;&#x30F3;&#x3092;3&#x6642;&#x9593;ON
+              |             
+              p.ui-li-aside &#x96E8; 13&#x2103;
+          |           
+          li
+            a(href='diary4')
+              h3 2015-03-08
+              |             
+              p &#x6E29;&#x5EA6;&#x304C;&#x4F4E;&#x4E0B;&#x3057;&#x305F;&#x305F;&#x3081;&#x3001;&#x30D2;&#x30FC;&#x30BF;&#x30FC;&#x3092;2&#x6642;&#x9593;ON
+              |             
+              p.ui-li-aside &#x96E8; 14&#x2103;
+          |           
+          li
+            a(href='diary5')
+              h3 2015-03-11
+              |             
+              p &#x63DB;&#x6C17;&#x30D5;&#x30A1;&#x30F3;&#x3092;1&#x6642;&#x9593;ON
+              |             
+              p.ui-li-aside &#x6674;&#x308C; 18&#x2103;
+          |           
+          li
+            a(href='diary5')
+              h3 2015-03-15
+              |             
+              p &#x53CE;&#x7A6B;&#x3001;&#x53CE;&#x91CF;&#x306F;23kg
+              |             
+              p.ui-li-aside &#x6674;&#x308C; 16&#x2103;
+          |           
+          li
+            a(href='diary5')
+              h3 2015-03-16
+              |             
+              p &#x305D;&#x308D;&#x305D;&#x308D;&#x30EA;&#x30EA;&#x30FC;&#x30B9;
+              |             
+              p.ui-li-aside &#x66C7;&#x308A; 13&#x2103;
+      |       
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(href='home.html', data-icon='home') &#x30DB;&#x30FC;&#x30E0;
+            li
+              a(href='help.html', data-icon='info') &#x30D8;&#x30EB;&#x30D7;

@@ -1,0 +1,71 @@
+extends layout
+
+block content
+  body
+    // 監視条件登録
+    #page_alert(data-role='page')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') キャンセル
+        h1 監視条件
+      .ui-content(role='main')
+        div(data-role='fieldcontain')
+          label(for='sensor-choice1') センサ：
+          select#sensor-choice1(name='sensor-choice1', data-native-menu='false')
+            option センサを選択してください
+            option(value='spring') 温度
+            option(value='summer') 湿度
+            option(value='autumn') 照度
+            option(value='winter') CO2濃度
+            option(value='winter') 土壌温度
+            option(value='winter') 土壌水分量
+        p
+        div(data-role='fieldcontain')
+          label(for='rel-choice1') 大小関係：
+          select#rel-choice1(name='rel-choice1', data-native-menu='false')
+            option 大小関係を選択してください
+            option(value='spring') ＜
+            option(value='spring') ≦
+            option(value='summer') ＝
+            option(value='autumn') ＞
+            option(value='autumn') ≧
+        p
+        div(data-role='fieldcontain')
+          label(for='threshold1') 閾値：
+          input#threshold1(name='threshold1', type='number')
+        h3 - AND -
+        div(data-role='fieldcontain')
+          label(for='sensor-choice2') センサ：
+          select#sensor-choice2(name='sensor-choice2', data-native-menu='false')
+            option センサを選択してください
+            option(value='spring') 温度
+            option(value='summer') 湿度
+            option(value='autumn') 照度
+            option(value='winter') CO2濃度
+            option(value='winter') 土壌温度
+            option(value='winter') 土壌水分量
+        p
+        div(data-role='fieldcontain')
+          label(for='rel-choice2') 大小関係：
+          select#rel-choice2(name='rel-choice2', data-native-menu='false')
+            option 大小関係を選択してください
+            option(value='spring') ＜
+            option(value='spring') ≦
+            option(value='summer') ＝
+            option(value='autumn') ＞
+            option(value='autumn') ≧
+        p
+        div(data-role='fieldcontain')
+          label(for='threshold2') 閾値：
+          input#threshold2(name='threshold2', type='number')
+        div(data-role='fieldcontain')
+          label(for='subject') 通知メールの件名：
+          input#subject(name='subject', type='text')
+        a(href='alertList.html', data-role='button') 登録
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='home') ホーム
+            li
+              a(data-icon='info', href='help') ヘルプ

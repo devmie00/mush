@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  body
+    // 日誌一覧
+    #page_diaryList(data-role='page', data-url='/diaryList/' + fid)
+      div(data-role='header', data-position='fixed', data-theme='b')
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1 日誌一覧
+        a(href='/diary/'+ fid + '/create', data-role='button') 登録
+      .ui-content(role='main')
+        .ui-field-contain
+          label(for='last' data-inline='true') 表示開始日：
+           -var today = new Date();
+           -var mm = ("0"+(today.getMonth()+1)).slice(-2);
+           -var last = [today.getFullYear(), mm , today.getDate()].join('-');             
+          input#last(name='date', type='date', value=last, data-role='datebox', data-options='{"mode":"calbox","themeDate":"c" }')
+        ul#diary-listview(data-role='listview', data-inset='true', data-divider-theme='d', fid=fid, last=last)
+      div(data-role='footer', data-position='fixed', data-theme='b')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='/home') ホーム
+            li
+              a(data-icon='info', href='/help') ヘルプ

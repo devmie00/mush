@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  body
+    // リモコン
+    #page_remocon(data-role='page')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1 リモコン
+      .ui-content(role='main')
+        .ui-field-contain
+          label(for='fan') 換気ファン：
+          select#fan(name='fan-choice', data-role='slider')
+            option(value='no') OFF
+            option(value='yes') ON
+        .ui-field-contain
+          label(for='heater') ヒーター：
+          select#heater(name='heater-choice', data-role='slider')
+            option(value='no') OFF
+            option(value='yes') ON
+        p
+        a(href='/remoconConfirm', data-role='button', data-theme='a' rel="external") 実行
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='/home') ホーム
+            li
+              a(data-icon='info', href='/help') ヘルプ
+          

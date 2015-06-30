@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  body
+    //- 日誌登録
+    #page_diary(data-role='page')
+      div#diary(data-role='header', data-position='fixed', data-theme='d', yid=yid, fid=fid)
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1 日記の登録
+      .ui-content(role='main')
+        form(action='/diary.post/'+ fid, method='post')
+          div(data-role='fieldcontain')          
+            label(for='input_date') 日付:
+               -var today = new Date();
+               -var mm = ("0"+(today.getMonth()+1)).slice(-2);
+               -var today_str = [today.getFullYear(), mm , today.getDate()].join('-');   
+            input#input_date(type='date', name='input_date', value=today_str)
+            input#yid(type='hidden' ,name='yid')            
+          div(data-role='fieldcontain')
+            label.select(for='work_choice1') 作業:
+            select#work_choice1(name='work_choice1', data-native-menu='false')
+              option 作業を選択してください
+          div(data-role='fieldcontain')
+            label(for='content') 内容:
+            textarea.input-block-level(id='content', name='content') 
+          div(data-role='fieldcontain')
+            label(for='memo') 補足:
+            textarea.input-block-level(id='memo', name='memo')
+          input#diary-submit(type='submit', value='登録', data-theme='a') 
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='/home') ホーム
+            li
+              a(data-icon='info', href='/help') ヘルプ
+    // 

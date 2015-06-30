@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  body
+    //- 高本農場
+    //- MENU
+    //- #page_field(data-role='page', data-transition='flip', data-url='/fieldData/'+ fieldID + '/' + fname)
+    #page_field(data-role='page', data-transition='flip')    
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1=fname 
+        a(href='#panel_menu', data-icon='bars') Menu
+      div(data-role='content')
+        div(data-role='fieldcontain')
+          label
+            b 環境情報：
+          ul#fieldData-listview(data-role='listview', data-inset='true', data-divider-theme='d', fieldID=fieldID)
+            li(data-role='list-divider', data-icon='info')
+              | 親機
+            // li><a href="http://www.iot.blue:8087/#graph" data-transition="flip" rel="external"><img src="thumb/temperature.png" class="ui-li-icon"/><big>温度</big><span class="ui-li-aside"><big>16.1 ℃</big></a
+            li
+            li
+      // footer
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='/home') ホーム
+            li
+              a(data-icon='info', href='/help') ヘルプ
+      // menu
+      #panel_menu(data-role='panel', data-display='overlay', data-position='right')
+        ul(data-role='listview', data-icon='false')
+          li(data-icon='delete')
+            a(href='#', data-rel='close') MENU
+          li(data-icon='edit')
+            a.ui-btn-icon-left(href='/diaryList/#{fieldID}') 日誌
+          li(data-icon='check')
+            a.ui-btn-icon-left(href='/remocon/#{fieldID}') リモコン
+          li(data-icon='alert')
+            a.ui-btn-icon-left(href='/alertList/#{fieldID}') 監視条件
+          li(data-icon='info')
+            a.ui-btn-icon-left(href='/fieldInfo/#{fieldID}') 圃場情報
+    // 高本農場 End

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  body
+    // ログインページ
+    #page_login(data-role='page', data-theme='c')
+      div(data-role='header', data-theme='d')
+        h1 農業モニタリングサービス
+      .ui-content(data-role='content')
+        form(action='/login.post', method='post')          
+          div(data-role='fieldcontain')
+            label(for='email') メールアドレス:
+            input#email(type='text', name='email', required='', placeholder='xxx@yyy.zzz')
+          div(data-role='fieldcontain')
+            label(for='email') パスワード:
+            input#pwd(type='password', name='pwd', required='', placeholder='******')
+          input#login-submi(type='submit', value='ログイン', data-theme='a')          
+      //
+        <p></p>
+        <div align="center">
+        <a href="http://tabrain.jp/ "target=_blank""><small>TABrain, Inc.</small></a>
+        </div>
+      div(data-role='footer', data-theme='d', data-position='fixed')
+        h4
+          small © 2015 TABrain, Inc. and Ayumi-kinoko, Inc.

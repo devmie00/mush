@@ -1,0 +1,79 @@
+extends layout
+
+block content
+  body
+    // 写真一覧
+    #page_photoList(data-role='page')
+      #dialog_photo(data-role='popup', data-dismissible='true', data-overlay-theme='a')
+        // div id="dialog_photo" data-rel="dialog" data-transition="pop" data-overlay-theme="a"
+        // a href="#" data-rel="back" class="ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-right">閉じる</a
+        // a data-role="button" data-rel="back" data-icon="back">閉じる</a
+        img(src='images/vegi.jpg', style='max-height:320px;')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1 圃場写真
+      .ui-content(role='main')
+        ul(data-role='listview')
+          li
+            a(href='#dialog_photo', data-rel='popup', data-transition='pop')
+              img(src='images/vegi_t.png', alt='')
+              h3 14:01
+              p 2015/5/24
+          li
+            a(href='#dialog_photo', data-rel='popup', data-transition='pop')
+              img(src='images/vegi_t.png', alt='')
+              h3 13:02
+              p 2015/5/24
+          li
+            a(href='#dialog_photo', data-rel='popup', data-transition='pop')
+              img(src='images/vegi_t.png', alt='')
+              h3 12:01
+              p 2015/5/24
+          li
+            a(href='#dialog_photo', data-rel='popup', data-transition='pop')
+              img(src='images/vegi_t.png', alt='')
+              h3 11:03
+              p 2015/5/24
+          li
+            a(href='#dialog_photo', data-rel='popup', data-transition='pop')
+              img(src='images/vegi_t.png', alt='')
+              h3 10:01
+              p 2015/5/24
+          li
+            a(href='')
+              img(src='images/vegi_t.png', alt='')
+              h3 09:02
+              p 2015/5/24
+          li
+            a(href='')
+              img(src='images/vegi_t.png', alt='')
+              h3 08:02
+              p 2015/5/24
+          li
+            a(href='')
+              img(src='images/vegi_t.png', alt='')
+              h3 07:01
+              p 2015/5/24
+          li
+            a(href='')
+              img(src='images/vegi_t.png', alt='')
+              h3 06:03
+              p 2015/5/24
+          li
+            a(href='')
+              img(src='images/vegi_t.png', alt='')
+              h3 05:02
+              p 2015/5/24
+          li
+            a(href='')
+              img(src='images/vegi_t.png', alt='')
+              h3 04:01
+              p 2015/5/24
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='home') ホーム
+            li
+              a(data-icon='info', href='help') ヘルプ

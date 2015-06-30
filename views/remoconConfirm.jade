@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  body
+    #page_confirm(data-role='dialog')
+      div(data-role='header', data-theme='d')
+        h1 実行の確認
+      div(data-role='content')
+        h2 機器を制御してよいですか？
+        a(href='/remocon', data-role='button', data-theme='a', data-rel='back') はい、実行します
+        a(href='/remocon', data-role='button', data-rel='back') いいえ、実行しません

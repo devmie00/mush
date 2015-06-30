@@ -1,0 +1,154 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    |     
+    title &#x8FB2;&#x696D;&#x30E2;&#x30CB;&#x30BF;&#x30EA;&#x30F3;&#x30B0;&#x30B5;&#x30FC;&#x30D3;&#x30B9; &#x30E2;&#x30C3;&#x30AF;&#x30A2;&#x30C3;&#x30D7; - V0
+    |     
+    link(href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css', rel='stylesheet')
+    |     
+    script(src='http://code.jquery.com/jquery-1.9.1.min.js')
+    |     
+    script(src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js', type='text/javascript')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1 user-scalable=no maximum-scale=1')
+  |   
+  body
+    // 高本農場
+    // -MENU
+    #page_field(data-role='page', data-transition='flip')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') &#x623B;&#x308B;
+        |         
+        h1 &#x9AD8;&#x672C;&#x8FB2;&#x5834;
+        |         
+        a(href='#panel_menu', data-icon='bars') Menu
+      |       
+      div(data-role='content')
+        div(data-role='fieldcontain')
+          label
+            b &#x74B0;&#x5883;&#x60C5;&#x5831;&#xFF1A;
+          |           
+          ul(data-role='listview', data-inset='true', data-divider-theme='d')
+            li(data-role='list-divider', data-icon='info')
+              | &#x89AA;&#x6A5F;
+            // li><a href="http://www.iot.blue:8087/#graph" data-transition="flip" rel="external"><img src="thumb/temperature.png" class="ui-li-icon"/><big>温度</big><span class="ui-li-aside"><big>16.1 ℃</big></a
+            li
+              a(href='graph.html#graph', data-transition='flip', rel='external')
+                img.ui-li-icon(src='thumb/temperature.png')
+                |               
+                big &#x6E29;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 16.1 &#x2103;
+            li
+              a(href='#page_th')
+                img.ui-li-icon(src='thumb/humidity.png')
+                |               
+                big &#x6E7F;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 69.2 %
+            li
+              a(href='#page_ti')
+                img.ui-li-icon(src='thumb/illuminance.png')
+                |               
+                big &#x7167;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 0 lux
+            li
+              a(href='#page_tc')
+                img.ui-li-icon(src='thumb/co2.png')
+                |               
+                big
+                  | CO
+                  sub 2
+                  | &#x6FC3;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 2,342 ppm
+            li
+              a(href='#page_tc')
+                img.ui-li-icon(src='thumb/temperature.png')
+                |               
+                big &#x571F;&#x58CC;&#x6E29;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 15.7 &#x2103;
+            li
+              a(href='#page_tc')
+                img.ui-li-icon(src='thumb/co2.png')
+                |               
+                big &#x571F;&#x58CC;&#x6C34;&#x5206;&#x91CF;
+                |               
+                span.ui-li-aside
+                  big 2.8%
+            li
+              a(href='photoList.html')
+                big &#x5199;&#x771F;
+            li(data-role='list-divider')
+              | &#x5B50;&#x6A5F;&#xFF11;
+            |             
+            li
+              a(href='#page_tt', data-transition='flip')
+                img.ui-li-icon(src='thumb/temperature.png')
+                |               
+                big &#x6E29;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 16.1 &#x2103;
+            li
+              a(href='#page_th')
+                img.ui-li-icon(src='thumb/humidity.png')
+                |               
+                big &#x6E7F;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 69.2 %
+            li(data-role='list-divider')
+              | &#x5B50;&#x6A5F;&#xFF12;
+            |             
+            li
+              a(href='#page_tt', data-transition='flip')
+                img.ui-li-icon(src='thumb/temperature.png')
+                |               
+                big &#x6E29;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 16.1 &#x2103;
+            li
+              a(href='#page_th')
+                img.ui-li-icon(src='thumb/humidity.png')
+                |               
+                big &#x6E7F;&#x5EA6;
+                |               
+                span.ui-li-aside
+                  big 69.2 %
+      // footer
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(href='home.html', data-icon='home') &#x30DB;&#x30FC;&#x30E0;
+            li
+              a(href='help.html', data-icon='info') &#x30D8;&#x30EB;&#x30D7;
+      // menu
+      #panel_menu(data-role='panel', data-display='overlay', data-position='right')
+        ul(data-role='listview', data-icon='false')
+          li(data-icon='delete')
+            a(href='#', data-rel='close') MENU
+          |           
+          li(data-icon='edit')
+            a.ui-btn-icon-left(href='diaryList.html') &#x65E5;&#x8A8C;
+          |           
+          li(data-icon='check')
+            a.ui-btn-icon-left(href='remocon.html') &#x30EA;&#x30E2;&#x30B3;&#x30F3;
+          |           
+          li(data-icon='alert')
+            a.ui-btn-icon-left(href='alertList.html') &#x76E3;&#x8996;&#x6761;&#x4EF6;
+          |           
+          li(data-icon='info')
+            a.ui-btn-icon-left(href='fieldInfo.html') &#x5703;&#x5834;&#x60C5;&#x5831;
+    // 高本農場 End

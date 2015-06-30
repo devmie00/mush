@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  body
+    // 監視設定
+    #page_help(data-role='page')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1 ヘルプ
+      .ui-content(role='main')
+        p トピックから選択してください
+        div(data-role='collapsible')
+          h2 リモコン
+          div(data-role='collapsible')
+            h3 概要
+            p
+              | 圃場にある機器をスマートデバイスから制御できます。 ただし、正しく制御できたかどうかはセンサの値を見て判断してください。 例えば、ヒーターを制御した場合は、温度をチェックすることで正しくON/OFFできたかを 確認することができます。
+          div(data-role='collapsible')
+            h3 使い方
+            p
+              | 該当する機器のスライドスイッチでON/OFFしてください。 現在の状態は、現在のスライドスイッチの位置で確認することができます。 数分間のタイムラグがありますので、ご注意ください。
+        div(data-role='collapsible')
+          h2 設定
+          div(data-role='collapsible')
+            h3 概要
+            p 本サービスの利用に必要なメールアドレスおよび電話番号を登録・修正してください。 
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='home') ホーム

@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  body
+    // 設定
+    #page_setting(data-role='page')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        h1 設定
+      .ui-content(role='main')
+        //
+          エラーメッセージが出ないように暫定対応
+          <form action="send.php" method="get"
+        div(data-role='fieldcontain')
+          label(for='email') メールアドレス:
+          input#email(type='email', name='email')
+        div(data-role='fieldcontain')
+          label(for='phone') 電話番号:
+          input#phone(type='tel', name='phone')
+        //
+          エラーメッセージが出ないように暫定対応
+          <input type="submit" value="登録"
+        a(div='', data-role='button', data-rel='back') 登録
+        //
+          エラーメッセージが出ないように暫定対応
+          </form
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='home', href='home') ホーム
+            li
+              a(href='help.html', data-icon='info') ヘルプ

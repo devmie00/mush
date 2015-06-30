@@ -1,0 +1,67 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    |     
+    title &#x8FB2;&#x696D;&#x30E2;&#x30CB;&#x30BF;&#x30EA;&#x30F3;&#x30B0;&#x30B5;&#x30FC;&#x30D3;&#x30B9; &#x30E2;&#x30C3;&#x30AF;&#x30A2;&#x30C3;&#x30D7; - V0
+    |     
+    link(href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css', rel='stylesheet')
+    |     
+    script(src='http://code.jquery.com/jquery-1.9.1.min.js')
+    |     
+    script(src='/javascripts/mush.js', type='text/javascript')
+    |     
+    script(src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js', type='text/javascript')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1 user-scalable=no maximum-scale=1')
+  |   
+  body
+    // ホームページの眼も
+    #page_home(data-role='page', data-url='/home')
+      div(data-position='fixed', data-role='header', data-theme='a')
+        a(href='login２.html', data-role='button', data-icon='delete') &#x7D42;&#x4E86;
+        |         
+        h1 &#x8FB2;&#x696D;&#x30E2;&#x30CB;&#x30BF;&#x30EA;&#x30F3;&#x30B0;&#x30B5;&#x30FC;&#x30D3;&#x30B9;
+      |       
+      .ui-content(data-role='contents')
+        div(data-role='fieldcontain')
+          div(data-mini='true', data-role='collapsible', data-theme='a')
+            h3
+              | &#x304A;&#x77E5;&#x3089;&#x305B;
+              span
+            |             
+            ul
+              li
+                | &#x30B5;&#x30FC;&#x30D3;&#x30B9;&#x304C;3/31(&#x706B;)&#x306E;12&#x6642;&#x307E;&#x3067;&#x505C;&#x6B62;&#x3057;&#x307E;&#x3059;&#x3002;
+              |               
+              li
+                | &#x65B0;&#x3057;&#x3044;&#x6A5F;&#x80FD;(&#x5929;&#x6C17;&#x4E88;&#x5831;)&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3057;&#x305F;&#x3002;
+        |         
+        p
+        |         
+        ul#fields-listview(data-role='listview', data-inset='true', data-filter='true', data-input='#siteFilter', data-divider-theme='a', data-filter-placeholder='検索したい圃場のキーワード')
+          li(data-role='list-divider')
+            | &#x5703;&#x5834;&#x4E00;&#x89A7;
+          |           
+          li
+            a(href='#page_tsuka1', data-transition='flip') &#x585A;&#x672C;&#x8FB2;&#x5834;1
+          |           
+          li
+            a(href='#') &#x585A;&#x672C;&#x8FB2;&#x5834;2
+          |           
+          li
+            a(href='field', data-transition='flip')
+              | &#x9AD8;&#x672C;&#x8FB2;&#x5834;
+              span.ui-li-count 2
+          |           
+          li
+            a(href='#') &#x5B9F;&#x9A13;&#x8FB2;&#x5834;
+      |       
+      div(data-position='fixed', data-role='footer', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(data-icon='gear', href='setting') &#x8A2D;&#x5B9A;
+            li
+              a(data-icon='info', href='help') &#x30D8;&#x30EB;&#x30D7;

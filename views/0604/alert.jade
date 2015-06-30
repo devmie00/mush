@@ -1,0 +1,127 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    |     
+    title &#x8FB2;&#x696D;&#x30E2;&#x30CB;&#x30BF;&#x30EA;&#x30F3;&#x30B0;&#x30B5;&#x30FC;&#x30D3;&#x30B9; &#x30E2;&#x30C3;&#x30AF;&#x30A2;&#x30C3;&#x30D7; - V0
+    |     
+    link(href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css', rel='stylesheet')
+    |     
+    script(src='http://code.jquery.com/jquery-1.9.1.min.js')
+    |     
+    script(src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js', type='text/javascript')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+  |   
+  body
+    // 監視条件登録
+    #page_alert(data-role='page')
+      div(data-role='header', data-position='fixed', data-theme='d')
+        a(data-role='button', data-rel='back', data-icon='back') &#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;
+        |         
+        h1 &#x76E3;&#x8996;&#x6761;&#x4EF6;
+      |       
+      .ui-content(role='main')
+        div(data-role='fieldcontain')
+          label(for='sensor-choice1') &#x30BB;&#x30F3;&#x30B5;&#xFF1A;
+          |           
+          select#sensor-choice1(name='sensor-choice1', data-native-menu='false')
+            option &#x30BB;&#x30F3;&#x30B5;&#x3092;&#x9078;&#x629E;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+            |             
+            option(value='spring') &#x6E29;&#x5EA6;
+            |             
+            option(value='summer') &#x6E7F;&#x5EA6;
+            |             
+            option(value='autumn') &#x7167;&#x5EA6;
+            |             
+            option(value='winter') CO2&#x6FC3;&#x5EA6;
+            |             
+            option(value='winter') &#x571F;&#x58CC;&#x6E29;&#x5EA6;
+            |             
+            option(value='winter') &#x571F;&#x58CC;&#x6C34;&#x5206;&#x91CF;
+        |         
+        p
+        |         
+        div(data-role='fieldcontain')
+          label(for='rel-choice1') &#x5927;&#x5C0F;&#x95A2;&#x4FC2;&#xFF1A;
+          |           
+          select#rel-choice1(name='rel-choice1', data-native-menu='false')
+            option &#x5927;&#x5C0F;&#x95A2;&#x4FC2;&#x3092;&#x9078;&#x629E;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+            |             
+            option(value='spring') &#xFF1C;
+            |             
+            option(value='spring') &lE;
+            |             
+            option(value='summer') &#xFF1D;
+            |             
+            option(value='autumn') &#xFF1E;
+            |             
+            option(value='autumn') &gE;
+        |         
+        p
+        |         
+        div(data-role='fieldcontain')
+          label(for='threshold1') &#x95BE;&#x5024;&#xFF1A;
+          |           
+          input#threshold1(name='threshold1', type='number')
+        |         
+        h3 - AND -
+        |         
+        div(data-role='fieldcontain')
+          label(for='sensor-choice2') &#x30BB;&#x30F3;&#x30B5;&#xFF1A;
+          |           
+          select#sensor-choice2(name='sensor-choice2', data-native-menu='false')
+            option &#x30BB;&#x30F3;&#x30B5;&#x3092;&#x9078;&#x629E;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+            |             
+            option(value='spring') &#x6E29;&#x5EA6;
+            |             
+            option(value='summer') &#x6E7F;&#x5EA6;
+            |             
+            option(value='autumn') &#x7167;&#x5EA6;
+            |             
+            option(value='winter') CO2&#x6FC3;&#x5EA6;
+            |             
+            option(value='winter') &#x571F;&#x58CC;&#x6E29;&#x5EA6;
+            |             
+            option(value='winter') &#x571F;&#x58CC;&#x6C34;&#x5206;&#x91CF;
+        |         
+        p
+        |         
+        div(data-role='fieldcontain')
+          label(for='rel-choice2') &#x5927;&#x5C0F;&#x95A2;&#x4FC2;&#xFF1A;
+          |           
+          select#rel-choice2(name='rel-choice2', data-native-menu='false')
+            option &#x5927;&#x5C0F;&#x95A2;&#x4FC2;&#x3092;&#x9078;&#x629E;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+            |             
+            option(value='spring') &#xFF1C;
+            |             
+            option(value='spring') &lE;
+            |             
+            option(value='summer') &#xFF1D;
+            |             
+            option(value='autumn') &#xFF1E;
+            |             
+            option(value='autumn') &gE;
+        |         
+        p
+        |         
+        div(data-role='fieldcontain')
+          label(for='threshold2') &#x95BE;&#x5024;&#xFF1A;
+          |           
+          input#threshold2(name='threshold2', type='number')
+        |         
+        div(data-role='fieldcontain')
+          label(for='subject') &#x901A;&#x77E5;&#x30E1;&#x30FC;&#x30EB;&#x306E;&#x4EF6;&#x540D;&#xFF1A;
+          |           
+          input#subject(name='subject', type='text')
+        |         
+        a(href='alertList.html', data-role='button') &#x767B;&#x9332;
+      |       
+      div(data-role='footer', data-position='fixed', data-theme='d')
+        // <h4>&copy; 2015 TABrain, Inc.</h4>
+        div(data-role='navbar')
+          ul
+            li
+              a(href='home.html', data-icon='home') &#x30DB;&#x30FC;&#x30E0;
+            li
+              a(href='help.html', data-icon='info') &#x30D8;&#x30EB;&#x30D7;
