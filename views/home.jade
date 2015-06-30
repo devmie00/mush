@@ -4,41 +4,27 @@ block content
   body
     // ホームページ
     console.log('in home jade')
-    #page_home(data-role='page', data-url='/home')    
-      div(data-position='fixed', data-role='header', data-theme='b')
-        a(href='login', data-role='button', data-icon='delete') 終了
+    #page_home(data-role='page', data-url='/home', gid=gid)    
+      div(data-position='fixed', data-role='header', data-theme='d')
+        a(href='login', data-role='button', data-icon='flat-cross') 終了
         h1 農業モニタリングサービス
       .ui-content(data-role='contents')
         div(data-role='fieldcontain')
           div(data-mini='true', data-role='collapsible', data-theme='a')
             h3
               | お知らせ
-              span
-            ul
-              li
-                | サービスが3/31(火)の12時まで停止します。
-              li
-                | 新しい機能(天気予報)を追加しました。
+              span(class="ui-li-count")
+            ul#notices-listview
         p
         ul#fields-listview(data-role='listview', data-inset='true', data-filter='true', data-input='#siteFilter', data-divider-theme='a', data-filter-placeholder='検索したい圃場のキーワード')        
           li(data-role='list-divider')
             | 圃場一覧
           li
-            a(href='#page_tsuka1', data-transition='flip') 塚本農場1
-          li
-            a(href='#') 塚本農場2
-          li
-            a(href='field.html', data-transition='flip')
-              | 高本農場
-              span.ui-li-count 2
-          li
-            a(href='#') 実験農場
       div(data-position='fixed', data-role='footer', data-theme='d')
-        // <h4>&copy; 2015 TABrain, Inc.</h4>
         div(data-role='navbar')
           ul
             li
-              a(data-icon='gear', href='/setting') 設定
+              a(data-icon='flat-settings', href='/setting') 設定
             li
-              a(data-icon='info', href='/help') ヘルプ
+              a(data-icon='flat-bubble', href='/help') ヘルプ
 

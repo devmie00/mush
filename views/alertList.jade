@@ -1,22 +1,22 @@
 extends layout
 
 block content
-  body
     // 監視設定
     #page_alertList(data-role='page' data-url='/alertList/' + fid)
       div(data-role='header', data-position='fixed', data-theme='d')
         a(data-role='button', data-rel='back', data-icon='back') 戻る
-        h1 監視通知条件設定
-        a(href='alert.html', data-role='button') 新規
+        h1 監視条件設定
+        a(href='alert.html', data-role='button', data-icon='edit') 新規
+
       .ui-content(role='main')
         ul#alert-listview(data-role='listview', data-inset='true', data-divider-theme='d', fid=fid)
-        //ul(data-role='listview', data-inset='true', data-divider-theme='a')
           li(data-role='list-divider')
-            | 監視通知条件一覧
+            | 監視条件一覧
+
       div(data-role='footer', data-position='fixed', data-theme='d')
         div(data-role='navbar')
           ul
             li
               a(data-icon='home', href='home') ホーム
             li
-              a(data-icon='info', href='help') ヘルプ
+              a(data-icon='flat-bubble', href='help') ヘルプ

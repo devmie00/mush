@@ -5,8 +5,9 @@ block content
     // リモコン
     #page_remocon(data-role='page')
       div(data-role='header', data-position='fixed', data-theme='d')
-        a(data-role='button', data-rel='back', data-icon='back') 戻る
+        a(data-role='button', data-rel='back', data-icon='back') キャンセル
         h1 リモコン
+
       .ui-content(role='main')
         .ui-field-contain
           label(for='fan') 換気ファン：
@@ -20,8 +21,8 @@ block content
             option(value='yes') ON
         p
         a(href='/remoconConfirm', data-role='button', data-theme='a' rel="external") 実行
+    //-
       div(data-role='footer', data-position='fixed', data-theme='d')
-        // <h4>&copy; 2015 TABrain, Inc.</h4>
         div(data-role='navbar')
           ul
             li

@@ -2,20 +2,20 @@
  *  API functions
  */
 var api = exports;
-
-api.getFields = function(req, res) {
+///api/groups/
+api.listFields = function(req, res) {
   if (! req.params.gid) {
-    console.log('> api.getFields(): no gid');
+    console.log('> api.listFields(): no gid');
     res.send(400);
     return;
   }
   var gid = Number(req.params.gid);
   if (isNaN(gid)) {
-    console.log('> api.getFields(): bad gid');
+    console.log('> api.listFields(): bad gid');
     res.send(400);
     return;
   }
-  console.log('> api.getFields(): ', gid);
+  console.log('> api.listFields(): ', gid);
   var body = [
     { "fid": 100, "name": "テスト圃場100", "numberOfDatastreams": 1 },
     { "fid": 200, "name": "テスト圃場200", "numberOfDatastreams": 3 },
@@ -56,7 +56,7 @@ api.getField = function(req, res) {
   return;
 };
 
-api.getDatastreams = function(req, res) {
+api.listDatastreams = function(req, res) {
   if (! req.params.fid) {
     console.log('> api.getDatastreams(): no fid');
     res.send(400);
@@ -72,7 +72,7 @@ api.getDatastreams = function(req, res) {
   var body = [
     {
       "did": "2gV1ppKPzLUvJO226Z5W", "name": "親機", "kind": 0, "publicKey": "2gV1ppKPzLUvJO226Z5W",
-      "datastreams": [
+      "sensors": [
         { "sid": "t", "name": "温度", "unit": "C", "value": 21.3 },
         { "sid": "h", "name": "湿度", "unit": "%", "value": 67.2 },
         { "sid": "i", "name": "照度", "unit": "lux", "value": 0 },
@@ -80,7 +80,7 @@ api.getDatastreams = function(req, res) {
     },
     {
       "did": "lqkRb3zaKoHn6wEgLzox", "name": "子機1", "kind": 1, "publicKey": "lqkRb3zaKoHn6wEgLzox",
-      "datastreams": [
+      "sensors": [
         { "sid": "t", "name": "温度", "unit": "C", "value": 23.1 },
         { "sid": "h", "name": "湿度", "unit": "%", "value": 47.1 },
         { "sid": "i", "name": "照度", "unit": "lux", "value": 1 }
@@ -88,7 +88,7 @@ api.getDatastreams = function(req, res) {
     },
     {
       "did": "vqPDB2A60AfnP7zXl6BZ", "name": "子機2", "kind": 1, "publicKey": "vqPDB2A60AfnP7zXl6BZ",
-      "datastreams": [
+      "sensors": [
         { "sid": "t", "name": "温度", "unit": "C", "value": 23.2 },
         { "sid": "h", "name": "湿度", "unit": "%", "value": 47.2 },
         { "sid": "i", "name": "照度", "unit": "lux", "value": 2 }
@@ -126,7 +126,7 @@ api.getDatastream = function(req, res) {
   return;
 };
 
-api.getNotices = function(req, res) {
+api.listNotices = function(req, res) {
   if (! req.query.last) {
     console.log('> api.getNotices(): no last');
     res.send(400);
@@ -173,7 +173,7 @@ api.getData = function(req, res) {
 };
 
 //-- DIARY --
-api.getDiaries = function(req, res) {
+api.listDiaries = function(req, res) {
   if (! req.params.fid) {
     console.log('> api.getDiaries(): no fid');
     res.send(400);
@@ -287,7 +287,7 @@ api.deleteDiary = function(req, res) {
 }
 
 // -- ALERT -- 
-api.getAlerts = function(req, res) {
+api.listAlerts = function(req, res) {
   if (! req.params.fid) {
     console.log('> api.getAlerts(): no fid');
     res.send(400);
@@ -389,7 +389,7 @@ api.deleteAlert = function(req, res) {
   return;
 }
 
-api.getWorkChoice = function(req, res) {
+api.listChoices = function(req, res) {
   console.log('> api.getWorkChoice(): ');
   var body = [ 
  	{"code":"1", "label":"農薬散布" },
