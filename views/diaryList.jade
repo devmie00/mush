@@ -2,12 +2,11 @@ extends layout
 
 block content
     // 日誌一覧
-    #page_diaryList(data-role='page', data-url='/diaryList/' + fid)
+    #page_diaryList(data-role='page', data-url='/diaryList' )
       div(data-role='header', data-position='fixed', data-theme='d')
-        //a(data-role='button', data-rel='back', data-icon='back') 戻る
-        a(href='/fieldData/' + fid + '/' + fname, data-role='button', data-icon='back') 戻る
+        a(href='/fieldData/' + fid , data-role='button', data-icon='back') 戻る
         h1 日誌一覧
-        a(href='/diary/'+ fid + '/create', data-icon='edit') 登録
+        a(href='/diary/create', data-icon='edit') 登録
 
       .ui-content(role='main')
         .ui-field-contain
@@ -15,10 +14,9 @@ block content
            -var today = new Date();
            -var mm = ("0"+(today.getMonth()+1)).slice(-2);
            -var dd = ("0"+(today.getDate()+1)).slice(-2);
-           -var last = [today.getFullYear(), mm , dd ].join('-');              
-          //- input#last(name='date', type='date', value=last, data-role='datebox', data-options='{"mode":"calbox", "overrideDateFormat": "YYYY/mm/dd"}', data-inline='true')
-          input#last(name='date', type='date', value=last, data-role='datebox', data-options='{"mode":"calbox" }', data-inline='true')
-        ul#diary-listview(data-role='listview', data-inset='true', data-divider-theme='d', fid=fid, last=last)
+           -var last = [today.getFullYear(), mm , dd ].join('-'); 
+          input#last(name='date', type='date', value=last, data-role='datebox', data-options='{"mode":"calbox","themeDate":"c" }')
+        ul#diary-listview(data-role='listview', data-inset='true', data-divider-theme='d', fid=fid, last=last )
       div(data-role='footer', data-position='fixed', data-theme='d')
 
         div(data-role='navbar')

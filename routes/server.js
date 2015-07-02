@@ -1,6 +1,7 @@
 /*
  * GET home page.
  *  2015.06.25  Merged with webapi
+ *  2015.07.02 (mori) session 
  */
 
 //var api = require('./api');
@@ -11,7 +12,6 @@ var User = model.User;
  
 // display login
 exports.login = function(req, res){
-	console.log('req.session=', req.session);
   if (req.session.uid) {
     // clear session info
     delete req.session.email;
@@ -23,6 +23,7 @@ exports.login = function(req, res){
 
 // submit login
 exports.login.post = function(req, res, next) {
+   console.log('in login post')
    var email   = req.body.email || '';
    var password = req.body.pwd || '';
    var query = { email: email, password: password };
@@ -41,7 +42,6 @@ exports.login.post = function(req, res, next) {
       req.session.email = data[0].email;
       req.session.uid = data[0].uid;
       req.session.gid = data[0].gid; 
-   	  console.log('req.session=', req.session);      
       res.redirect('/home');
     }
    });
@@ -52,6 +52,9 @@ exports.home = function(req, res, next) {
    console.log('in home')
    if (! req.session.uid || req.session.uid == '') {
       res.redirect('/login');
+   }
+   if (req.session.field) {
+     delete req.session.field;
    }
    console.log('>home:', req.session.uid, req.session.gid)
    res.render('home', { gid: req.session.gid });
@@ -66,15 +69,20 @@ exports.help = function(req, res){
 
 // fieldData
 exports.fieldData = function(req, res, next) {
-   console.log('in fieldData'); 
+
    var fid = Number(req.params.fid);
    var fname = String(req.params.fname);
-
-   req.session.field = {
+   console.log('in fieldData (fname):'+ fname); 
+   if (fname !== 'undefined') {
+       // home
+       console.log('in fname (fname ari):'+ fname); 
+       req.session.field = {
    	 	fid: fid,
    	 	fname: fname
-   };
-
+       };
+   } else {
+       fname = req.session.field.fname;   
+   }
    console.log('in fname:'+ fname); 
    // ここで本当はjsonオブジェクトを渡したい
    //app.getjson
@@ -85,7 +93,7 @@ exports.fieldData = function(req, res, next) {
 exports.fieldGraph = function(req, res, next) {
    var did = String(req.params.did);
    var sid = String(req.params.sid);
-   var unit = String(req.params.unit);   
+   var unit = String(req.params.unit);      
    req.session.graph = {
    	 	did: did,
    	 	sid: sid,
@@ -113,27 +121,26 @@ exports.diary = function(req, res, next) {
    var fid = Number(req.session.field.fid);      
    var yid = Number(req.params.yid);
    req.session.diary = {
-   	 	yid: yid
+	yid: yid
    };      
    console.log('>in diary:' + fid + ':' + yid);    
-   res.render('diary', {fid:fid , yid : yid});
+   res.render('diary', { fid: fid, yid : yid });
 };
 
 // 日誌作成
 exports.diary_create = function(req, res, next) {
-
    var fid = Number(req.session.field.fid);      
+   var fname = String(req.session.field.fname);
    console.log('>in diary new:' + fid);    
-   res.render('diary', {fid : fid, yid: null});
+   res.render('diary', { fid : fid, yid: 'undefined' });
 };
 
 // 日誌登録
 exports.diary.post = function(req, res, next) {
    var fid = Number(req.session.field.fid);         
+   var yid = Number(req.params.yid);
    console.log('>in diary post:' + fid);   
 
-   var yid = Number(req.body.yid);
-      
    var input_date = req.body.input_date;
    var work  = req.body.work;
    var content  = req.body.content;   
@@ -146,6 +153,7 @@ exports.diary.post = function(req, res, next) {
     } else {   // INSERT
     	api.createDiary(req, res, res.redirect('/diaryList/'+ fid +'/'));    
     }
+    res.redirect('/diaryList');
 };
 
 // アラート表示
@@ -205,19 +213,13 @@ exports.remoconConfirm = function(req, res){
 // 日誌一覧
 exports.diaries = function(req, res){
    var fid = Number(req.session.field.fid);
-   
-   /*var today = new Date();
-   var mm = ("0"+(today.getMonth()+1)).slice(-2);
-   var dd = ("0"+(today.getDate()+1)).slice(-2);
-   
-   var last = [today.getFullYear(), mm , dd ].join('-');   
-   */
+   var fname = String(req.session.field.fname);
    console.log('>in diaries:'+ req.query.last);      
    var last = null;
    if (req.query.last) {
     	last = String(req.query.last);
    }
-   res.render('diaryList', { fid : fid, last : last});  
+   res.render('diaryList', { fid : fid , fname: fname, last : last});  
 };
 
 // アラート一覧

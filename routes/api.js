@@ -1,407 +1,733 @@
 /*
  *  API functions
+ *
+ *    2015.06.25  Web API(r9) and Models(r6)
+ *    2015.06.30  Web API(r13) and Models(r8)
  */
+
+var async = require('async');
+var http = require('http');
+var database = require('../models/database');
 var api = exports;
-///api/groups/
+
+/*
+  Private functions
+*/
+
+// getLatestValues() -- Get latest datastream values from phant
+function getLatestValues(publicKey, callback) {
+  var urlOpts = {
+    host: 'localhost',
+    path: '/output/' + publicKey + '/latest.json',
+    port: 8080
+  };
+  console.log('getLatestValues() from ', urlOpts);
+
+  http.get(urlOpts, function (res) {
+    var data = '';
+    res.on('data', function (chunk) {
+      data += chunk;
+    }).on('end', function () {
+      var s = data.toString();
+      var jsonData = JSON.parse(s);
+      console.log('getLatestValues(): ', s);
+      if (jsonData['success'] === false) {
+        callback(undefined);   // datastream not found
+        return;
+      }
+      callback(jsonData[0]);
+    });
+  });
+}
+
+/*
+  Fields api
+*/
+
+// listFields() -- List fields in the group
 api.listFields = function(req, res) {
   if (! req.params.gid) {
     console.log('> api.listFields(): no gid');
-    res.send(400);
+    res.send(400, { message: 'No gid' });
     return;
   }
   var gid = Number(req.params.gid);
   if (isNaN(gid)) {
     console.log('> api.listFields(): bad gid');
-    res.send(400);
+    res.send(400, { message: 'Bad gid' });
     return;
   }
   console.log('> api.listFields(): ', gid);
-  var body = [
-    { "fid": 100, "name": "テスト圃場100", "numberOfDatastreams": 1 },
-    { "fid": 200, "name": "テスト圃場200", "numberOfDatastreams": 3 },
-    { "fid": 300, "name": "テスト圃場300", "numberOfDatastreams": 1 },
-    { "fid": 400, "name": "テスト圃場400", "numberOfDatastreams": 4 },
-    { "fid": 500, "name": "テスト圃場500", "numberOfDatastreams": 1 }
-  ];
-  res.send(200, body);
-  return;
+
+  var fields = database.getFields();
+  fields.listFields(gid, function (err, items) {
+    fields.close();
+
+    if (err && typeof err !== 'array') {
+      console.log('fields.listFields() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! items)
+      items = err;
+
+    console.log('> fields = ', items);
+    res.json(200, items);
+  });
 };
 
+// getField() -- Get the field information
 api.getField = function(req, res) {
   if (! req.params.fid) {
     console.log('> api.getField(): no fid');
-    res.send(400);
+    res.send(400, { message: 'No fid' });
     return;
   }
   var fid = Number(req.params.fid);
   if (isNaN(fid)) {
     console.log('> api.getField(): bad fid');
-    res.send(400);
+    res.send(400, { message: 'Bad fid' });
     return;
   }
   console.log('> api.getField(): ', fid);
-  var body = {
-    "fid": fid,
-    "gid": 3,
-    "name": "何たら圃場",
-    "address": "東京都中野区中野100",
-    "contact": "03-0000-0000",
-    "usage": "キノコ栽培",
-    "location": "35.706272,139.665658",
-    "date": "2015-05-31T20:07:50.000Z",
-    "note": "テスト圃場",
-    "dids": [ "2gV1ppKPzLUvJO226Z5W", "lqkRb3zaKoHn6wEgLzox", "vqPDB2A60AfnP7zXl6BZ" ]
-  };
-  res.send(200, body);
-  return;
+
+  var fields = database.getFields();
+  fields.getField(fid, function (err, item) {
+    fields.close();
+
+    if (err) {
+      console.log('fields.getField() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! item) {
+      console.log('fields.getField() not found: ', fid);
+      res.send(404, { message: 'Not found' });
+      return;
+    }
+
+    console.log('> field = ', item);
+    res.json(200, item);
+  });
 };
 
+/*
+  Datastreams api
+*/
+
+// listDatastreams() -- List datastreams in the field
 api.listDatastreams = function(req, res) {
   if (! req.params.fid) {
-    console.log('> api.getDatastreams(): no fid');
-    res.send(400);
+    console.log('> api.listDatastreams(): no fid');
+    res.send(400, { message: 'No fid' });
     return;
   }
   var fid = Number(req.params.fid);
   if (isNaN(fid)) {
-    console.log('> api.getDatastreams(): bad fid');
-    res.send(400);
+    console.log('> api.listDatastreams(): bad fid');
+    res.send(400, { message: 'Bad fid' });
     return;
   }
-  console.log('> api.getDatastreams(): ', fid);
-  var body = [
-    {
-      "did": "2gV1ppKPzLUvJO226Z5W", "name": "親機", "kind": 0, "publicKey": "2gV1ppKPzLUvJO226Z5W",
-      "sensors": [
-        { "sid": "t", "name": "温度", "unit": "C", "value": 21.3 },
-        { "sid": "h", "name": "湿度", "unit": "%", "value": 67.2 },
-        { "sid": "i", "name": "照度", "unit": "lux", "value": 0 },
-        { "sid": "co2", "name": "CO2濃度", "unit": "ppm", "value": 560 } ]
-    },
-    {
-      "did": "lqkRb3zaKoHn6wEgLzox", "name": "子機1", "kind": 1, "publicKey": "lqkRb3zaKoHn6wEgLzox",
-      "sensors": [
-        { "sid": "t", "name": "温度", "unit": "C", "value": 23.1 },
-        { "sid": "h", "name": "湿度", "unit": "%", "value": 47.1 },
-        { "sid": "i", "name": "照度", "unit": "lux", "value": 1 }
-      ]
-    },
-    {
-      "did": "vqPDB2A60AfnP7zXl6BZ", "name": "子機2", "kind": 1, "publicKey": "vqPDB2A60AfnP7zXl6BZ",
-      "sensors": [
-        { "sid": "t", "name": "温度", "unit": "C", "value": 23.2 },
-        { "sid": "h", "name": "湿度", "unit": "%", "value": 47.2 },
-        { "sid": "i", "name": "照度", "unit": "lux", "value": 2 }
-      ]
+  console.log('> api.listDatastreams(): ', fid);
+
+  var datastreams = database.getDatastreams();
+  datastreams.listDatastreams(fid, function (err, items) {
+    datastreams.close();
+
+    if (err && typeof err !== 'array') {
+      console.log('fields.listDatastreams() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
     }
-  ];
-  res.send(200, body);
-  return;
+    if (! items || items.length === 0) {
+      res.send(404, { message: 'Not found' });
+      return;
+    }
+    console.log('> datastreams = ', items);
+
+    var nCount = 0;
+
+    // (1) execute sequential as follows:
+    async.waterfall([
+      // (1.1) manipulate data for all datastreams
+      function (callback) {
+        for (var i = 0; i < items.length; i++) {
+          console.log('> datastreams[' + i + '/' + items.length + '] ', items[i]);
+          var ii = i;
+
+          // (2) execute sequential as follows:
+          async.waterfall([
+            // (2.1) eliminates unused properties
+            function (callback) {
+              delete items[ii]._id;
+              delete items[ii].fid;
+              delete items[ii].description;
+              delete items[ii].deleteKey;
+              callback(null, items, ii);
+            },
+            // (2.2) get latest values from phant
+            function (items, ii, callback) {
+              getLatestValues(items[ii].publicKey, function (data) {
+                console.log('latestData = ', data);
+                callback(null, items, data, ii);
+              });
+            },
+            // (2.3) eliminates unused properties and add latest values
+            function (items, latestData, ii, callback) {
+              for (var j = 0; j < items[ii].sensors.length; j++) {
+                delete items[ii].sensors[j].accuracy;
+                delete items[ii].sensors[j].note;
+                var sid = items[ii].sensors[j].sid;
+                if (latestData !== undefined) {
+                  if (latestData[sid] !== undefined)
+                    items[ii].sensors[j].value = latestData[sid];
+                }
+              }
+              callback(null, items, ii);
+            }
+          ],
+            // (2.4) After everything has been completed, execute next step
+            function (err, items, ii) {
+              if (err)
+                throw err;
+              console.log('final items[' + ii + '] ', items[ii]);
+              if (++nCount === items.length)
+                callback(null, items);    // done manipulation
+            }
+          );   //-- end of inner async
+        }   //-- end of for loop
+      }
+    ],
+      // (1.2) return result as json
+      function (err, items) {
+        if (err)
+          throw err;
+
+        console.log('final items = ', items);
+        res.json(200, items);
+      }
+    );  //-- end of outer async
+  });
 };
 
+// getDatastream() -- Get the datastream information
 api.getDatastream = function(req, res) {
   if (! req.params.did) {
     console.log('> api.getDatastream(): no did');
-    res.send(400);
+    res.send(400, { message: 'No did' });
     return;
   }
-  //var did = Number(req.params.did); mori
-  //if (isNaN(did)) {
-//    console.log('> api.getDatastream(): bad did');
-//    res.send(400);
-//    return;
-//  }
-  var did = String(req.params.did);  
+  var did = req.params.did;
   if (! req.params.sid) {
     console.log('> api.getDatastream(): no sid');
-    res.send(400);
+    res.send(400, { message: 'No sid' });
     return;
   }
-  console.log('> api.getDatastream(): ', did);
-  var body = {
-    "sid": req.params.sid, "object": "気温", "name": "温度",
-    "unit": "C", "accuracy": "+/-0.5C", "note": "SHT-21"
-  };
-  res.send(200, body);
-  return;
+  var sid = req.params.sid;
+  console.log('> api.getDatastream(): ', did, sid);
+
+  var datastreams = database.getDatastreams();
+  datastreams.getDatastream(did, sid, function (err, item) {
+    datastreams.close();
+
+    if (err) {
+      console.log('datastreams.getDatastream() error: ', err);
+      res.send(500, { message: 'Internal error' }); 
+      return;
+    }
+    if (! item) {
+      console.log('datastream.getDatastream(): not found');
+      res.send(404, { message: 'Not found' });
+      return;
+    }
+    console.log('> datastream = ', item);
+
+    var sensor = null;
+    for (var i in item.sensors) {
+      if (sid === item.sensors[i].sid) {
+        sensor = item.sensors[i];
+        break;  // found
+      }
+    }
+    if (! sensor) {
+      console.log('> api.getDatastream(): sid not found');
+      res.send(404, { message: 'Not found' });
+      return;
+    }
+
+    console.log('> datastream.sensors = ', sensor);
+    res.json(200, sensor);
+  });
 };
 
+/*
+  Notices
+*/
+
+// listNotices() -- List notices 'last' latest notices
 api.listNotices = function(req, res) {
   if (! req.query.last) {
-    console.log('> api.getNotices(): no last');
-    res.send(400);
+    console.log('> api.listNotices(): no last');
+    res.send(400, { message: 'No last' });
     return;
   }
   var last = Number(req.query.last);
   if (isNaN(last)) {
-    console.log('> api.getNotices(): bad last');
-    res.send(400);
+    console.log('> api.listNotices(): bad last');
+    res.send(400, { message: 'Bad last' });
     return;
   }
-  console.log('> api.getNotices(): ', last);
-  var body = [
-    { "nid": 10, "from": "2015-05-30T00:00:00.000Z", "until": "2015-06-03T23:59:59.000Z", "notice": "サービス停止のお知らせ：来る5/30から6/3までサービスが停止しますのでお知らせします。" },
-    { "nid": 11, "from": "2015-06-03T00:00:00.000Z", "until": "2015-06-05T23:59:59.000Z", "notice": "サービス停止のお知らせ：来る6/3から6/5までサービスが停止しますのでお知らせします。" }
-  ];
-  res.send(200, body);
-  return;
+  console.log('> api.listNotices(): ', last);
+
+  var notices = database.getNotices();
+  notices.listNotices(last, function (err, items) {
+    notices.close();
+
+    if (err && typeof err !== 'array') {
+      console.log('notices.listNotices() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! items)
+      items = err;
+
+    console.log('> notices = ', items);
+    res.json(200, items);
+  });
 };
 
-api.getData = function(req, res) {
-  if (req.query.last) {
-    var last = req.query.last;
-    console.log('> api.getData(): ', last);
-  }
-  else if (req.query.date) {
-    var from = req.query.date;
-    console.log('> api.getData(): ', from);
-  }
-  var body = [
-    { "t": "20.0", "h": "40.0", "i": "0", "timestamp": "2015-05-31T10:00:00.000Z" },
-    { "t": "20.1", "h": "40.1", "i": "1", "timestamp": "2015-05-31T10:05:00.000Z" },
-    { "t": "20.2", "h": "40.2", "i": "2", "timestamp": "2015-05-31T10:10:00.000Z" },
-    { "t": "20.3", "h": "40.3", "i": "3", "timestamp": "2015-05-31T10:10:00.000Z" },
-    { "t": "20.4", "h": "40.4", "i": "4", "timestamp": "2015-05-31T10:15:00.000Z" },
-    { "t": "20.5", "h": "40.5", "i": "5", "timestamp": "2015-05-31T10:20:00.000Z" },
-    { "t": "20.6", "h": "40.6", "i": "6", "timestamp": "2015-05-31T10:25:00.000Z" },
-    { "t": "20.7", "h": "40.7", "i": "7", "timestamp": "2015-05-31T10:30:00.000Z" },
-    { "t": "20.8", "h": "40.8", "i": "8", "timestamp": "2015-05-31T10:35:00.000Z" },
-    { "t": "20.9", "h": "40.9", "i": "9", "timestamp": "2015-05-31T10:40:00.000Z" }
-  ];
-  res.send(200, body);
-  return;
-};
+/*
+  DIARY
+*/
 
-//-- DIARY --
+// listDiaries() -- List diaries in the field
 api.listDiaries = function(req, res) {
   if (! req.params.fid) {
-    console.log('> api.getDiaries(): no fid');
-    res.send(400);
+    console.log('> api.listDiaries(): no fid');
+    res.send(400, { message: 'No fid' });
     return;
   }
   var fid = Number(req.params.fid);
   if (isNaN(fid)) {
-    console.log('> api.getDiaries(): bad fid');
-    res.send(400);
+    console.log('> api.listDiaries(): bad fid');
+    res.send(400, { message: 'Bad fid' });
     return;
   }
-  console.log('> api.getDiaries(): ', fid);
+  console.log('> api.listDiaries(): ', fid);
+
+  var last = null, date = null;
   if (req.query.last) {
-    var last = req.query.last;
-    console.log('> api.getDiaries(): ', last);
+    last = Number(req.query.last);
+    console.log('> api.listDiaries(last): ', last);
+    //@ check last value
   }
   else if (req.query.date) {
-    var from = req.query.date;
-    console.log('> api.getDiaries(): ', from);
+    date = req.query.date;
+    console.log('> api.listDiaries(date): ', date);
+    //@ check date format and value
   }
   else {
-    console.log('> api.getDiaries(): no query');
-    res.send(400);
+    console.log('> api.listDiaries(): no query');
+    res.send(400, { message: 'No last and date' });
     return;
   }
+  
+  var diaries = database.getDiaries();
+  diaries.listDiaries(fid, last, date, function (err, items) {
+    diaries.close();
 
-  var body = [
-    { "yid": 100, "fid": fid, "date": "2015-06-06T10:30:00.000Z", "uid": 20, "work": "農薬散布", "content": "云たら農薬を30L", "memo": "暑い一日", "pid": 0 },
-    { "yid": 101, "fid": fid, "date": "2015-06-07T15:00:00.000Z", "uid": 20, "work": "農薬散布", "content": "云たら農薬2を10L", "memo": "寒い一日", "pid": 0 },
-    { "yid": 102, "fid": fid, "date": "2015-06-08T06:00:00.000Z", "uid": 20, "work": "雑草取り", "content": "沢山とったで", "memo": "長い一日", "pid": 0 }
-  ];
-  res.send(200, body);
-  return;
+    if (err && typeof err !== 'array') {
+      console.log('diaries.listDiaries() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! items) {
+      res.send(404, { message: 'No diaries' });
+      return;
+    }
+
+    console.log('> diaries = ', items);
+    res.json(200, items);
+  });
 };
 
+// getDiary() -- Get the diary information
 api.getDiary = function(req, res) {
   if (! req.params.yid) {
     console.log('> api.getDiarie(): no yid');
-    res.send(400);
+    res.send(400, { message: 'No yid' });
     return;
   }
   var yid = Number(req.params.yid);
   if (isNaN(yid)) {
     console.log('> api.getDiary(): bad yid');
-    res.send(400);
+    res.send(400, { message: 'Bad yid' });
     return;
   }
+
   console.log('> api.getDiary(): ', yid);
-  var fid = (yid / 10) + 1;
-  var body = {
-     "yid": yid, "fid": fid, "date": "2015-06-06T10:30:00.000Z", "uid": 20, "work": 3, "content": "云たら農薬を30L", "memo": "暑い一日", "pid": 0
-  };
-  res.send(200, body);
-  return;
+  var diaries = database.getDiaries();
+  diaries.getDiary(yid, function (err, item) {
+    diaries.close();
+
+    if (err) {
+      console.log('diaries.getDiary() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! item) {
+      res.send(404, { message: 'No diary' });
+      return;
+    }
+
+    console.log('> diary = ', item);
+    res.json(200, item);
+  });
 };
 
+// createDiary() -- Create a diary
 api.createDiary = function(req, res) {
   if (! req.params.fid) {
     console.log('> api.createDiary(): no fid');
-    res.send(400);
+    res.send(400, { message: 'No fid' });
     return;
   }
   var fid = Number(req.params.fid);
   if (isNaN(fid)) {
     console.log('> api.createDiary(): bad fid');
-    res.send(400);
+    res.send(400, { message: 'Bad fid' });
     return;
   }
-  console.log('> api.createDiary(): ', fid);
-  var yid = fid * 10;
-  var body = {
-    "yid": yid
+  var diary = {
+    fid: fid,
+    date: new Date(req.body.input_date),
+    uid: req.session.uid,
+    work: req.body.work_choice1,
+    content: req.body.content,
+    memo: req.body.memo,
+    weather: '-',
+    pid: 0
   };
-  res.send(200, body);
-  return;
+  console.log('> api.createDiary(): ', diary);
+
+  var diaries = database.getDiaries();
+  diaries.createDiary(fid, diary, function (err, item) {
+    diaries.close();
+
+    if (err) {
+      console.log('diaries.createDiary() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! item) {
+      console.log('diaries.createDiary() can not create');
+      res.send(400, { message: 'Can not create' });
+      return;
+    }
+
+    console.log('> result = ', item.result);
+    res.redirect('/diaryList/' + fid);  //@ redirect to diary list page
+  });
 }
 
+// updateDiary() -- Update the diary
 api.updateDiary = function(req, res) {
-// 暫定、yidもbodyに変更　mori
-  if (! req.body.yid) {
+  console.log('>> api.updateDiary()');
+  if (! req.params.yid) {
     console.log('> api.updateDiary(): no yid');
-    res.send(400);
+    res.send(400, { message: 'No yid' });
     return;
   }
-  var yid = Number(req.body.yid);
+  var yid = Number(req.params.yid);
   if (isNaN(yid)) {
     console.log('> api.updateDiary(): bad yid');
-    res.send(400);
+    res.send(400, { message: 'Bad yid' });
     return;
   }
-  console.log('> api.updateDiary(): ', yid);
-  res.send(200);
-  return;
+  var diary = {
+    yid: yid,
+    fid: req.session.field.fid,
+    date: req.body.input_date,
+    uid: req.session.uid,
+    work: req.body.work_choice1,
+    content: req.body.content,
+    memo: req.body.memo,
+    weather: req.body.weather,
+    pid: 0
+  };
+  console.log('> api.updateDiary(): ', yid, diary);
+
+  var diaries = database.getDiaries();
+  diaries.updateDiary(yid, diary, function (err, item) {
+    diaries.close();
+
+    if (err) {
+      console.log('diaries.updateDiary() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! item) {
+      console.log('diaries.updateDiary() can not update');
+      res.send(404, { message: 'Can not update' });
+      return;
+    }
+
+    console.log('> updated diary = ', item);
+    res.redirect('/diaryList/' + fid);  //@ redirect to diary list page
+    // res.send(200);
+  });
 }
 
 api.deleteDiary = function(req, res) {
   if (! req.params.yid) {
     console.log('> api.deleteDiary(): no yid');
-    res.send(400);
+    res.send(400, { message: 'No yid' });
     return;
   }
   var yid = Number(req.params.yid);
   if (isNaN(yid)) {
     console.log('> api.deleteDiary(): bad yid');
-    res.send(400);
+    res.send(400, { message: 'Bad yid' });
     return;
   }
   console.log('> api.deleteDiary(): ', yid);
-  res.send(200);
-  return;
+
+  var diaries = database.getDiaries();
+  diaries.removeDiary(yid, function (err, numberOfRemovedDocs) {
+    console.log('> diaries.removeDiary(callback): ', err);
+    diaries.close();
+    if (err) {
+      console.log('diaries.removeDiary() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (numberOfRemovedDocs < 1) {
+      res.send(404, { message: 'Can not remove' });
+      return;
+    }
+
+    res.send(200);
+  });
 }
 
 // -- ALERT -- 
 api.listAlerts = function(req, res) {
   if (! req.params.fid) {
-    console.log('> api.getAlerts(): no fid');
-    res.send(400);
+    console.log('> api.listAlerts(): no fid');
+    res.send(400, { message: 'No fid' });
     return;
   }
   var fid = Number(req.params.fid);
   if (isNaN(fid)) {
-    console.log('> api.getAlerts(): bad fid');
-    res.send(400);
+    console.log('> api.listAlerts(): bad fid');
+    res.send(400, { message: 'Bad fid' });
     return;
   }
-  console.log('> api.getAlerts(): ', fid);
-  var body = [
-    { "aid": 8000, "fid": fid, "uid": 20, "name": "Mie", "subject": "通知メールだよ", "conditions": [ { "did": "X01234567890123456789", "sid": "t", "relation": 0, "threshold": 30.0 } ] },
-    { "aid": 8001, "fid": fid, "uid": 20, "name": "Mie", "subject": "通知メールだよ", "conditions": [ { "did": "Y01234567890123456789", "sid": "h", "relation": 1, "threshold": 60.0 } ] },
-    { "aid": 8002, "fid": fid, "uid": 20, "name": "Mie", "subject": "通知メールだよ(AND編)", "conditions": [
-      { "did": "Y01234567890123456789", "sid": "h", "relation": 1, "threshold": 60.0 },
-      { "did": "Z01234567890123456789", "sid": "i", "relation": 2, "threshold": 10000 }
-      ]
+  console.log('> api.listAlerts(): ', fid);
+
+  var alerts = database.getAlerts();
+  alerts.listAlerts(fid, function (err, items) {
+    alerts.close();
+    if (err && typeof err !== 'array') {
+      console.log('alerts.listAlerts() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
     }
-  ];
-  res.send(200, body);
-  return;
+    if (! items) {
+      res.send(404, { message: 'No alerts' });
+      return;
+    }
+
+    console.log('> alerts = ', items);
+    res.json(200, items);
+  });
 };
 
 api.getAlert = function(req, res) {
   if (! req.params.aid) {
     console.log('> api.getAlert(): no aid');
-    res.send(400);
+    res.send(400, { message: 'No aid' });
     return;
   }
   var aid = Number(req.params.aid);
   if (isNaN(aid)) {
     console.log('> api.getAlert(): bad aid');
-    res.send(400);
+    res.send(400, { message: 'Bad aid' });
     return;
   }
   console.log('> api.getAlert(): ', aid);
-  var fid = (aid / 10) + 1;
-  var body = {
-    "aid": aid, "fid": fid, "uid": 20, "name": "Mie", "subject": "通知メールだよ", "conditions": [ { "did": "X01234567890123456789", "sid": "t", "relation": 0, "threshold": 30.0 } ]
-  };
-  res.send(200, body);
-  return;
+
+  var alerts = database.getAlerts();
+  alerts.getAlert(aid, function (err, item) {
+    alerts.close();
+    if (err) {
+      console.log('alerts.getAlert() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! item) {
+      res.send(404, { message: 'No alert' });
+      return;
+    }
+
+    console.log('> alert = ', item);
+    res.json(200, item);
+  });
 };
 
 api.createAlert = function(req, res) {
   if (! req.params.fid) {
     console.log('> api.createAlert(): no fid');
-    res.send(400);
+    res.send(400, { message: 'No fid' });
     return;
   }
   var fid = Number(req.params.fid);
   if (isNaN(fid)) {
     console.log('> api.createAlert(): bad fid');
-    res.send(400);
+    res.send(400, { message: 'Bad fid' });
     return;
   }
   console.log('> api.createAlert(): ', fid);
+
   var aid = fid * 100;
   var body = {
     "aid": aid
   };
+
+  console.log('> body = ', body);
   res.send(200, body);
-  return;
 }
 
 api.updateAlert = function(req, res) {
   if (! req.params.aid) {
     console.log('> api.updateAlert(): no aid');
-    res.send(400);
+    res.send(400, { message: 'No aid' });
     return;
   }
   var aid = Number(req.params.aid);
   if (isNaN(aid)) {
     console.log('> api.updateAlert(): bad aid');
-    res.send(400);
+    res.send(400, { message: 'Bad aid' });
     return;
   }
   console.log('> api.updateAlert(): ', aid);
+
   res.send(200);
-  return;
 }
 
 api.deleteAlert = function(req, res) {
   if (! req.params.aid) {
     console.log('> api.deleteAlert(): no aid');
-    res.send(400);
+    res.send(400, { message: 'No aid' });
     return;
   }
   var aid = Number(req.params.aid);
   if (isNaN(aid)) {
     console.log('> api.deleteAlert(): bad aid');
-    res.send(400);
+    res.send(400, { message: 'Bad aid' });
     return;
   }
   console.log('> api.deleteAlert(): ', aid);
+
   res.send(200);
-  return;
 }
 
+/** choices **/
 api.listChoices = function(req, res) {
-  console.log('> api.getWorkChoice(): ');
-  var body = [ 
- 	{"code":"1", "label":"農薬散布" },
-	{"code":"2", "label":"水やり" },
-	{"code":"3","label":"収穫"},
-	{"code":"4","label":"草取り"},
-	{"code":"5","label":"見回り"},
-	{"code":"6","label":"その他"}
-  ];
-  
-  res.send(200, body);
-  return;
+  if (! req.params.fid) {
+    console.log('> api.listChoices(): no fid');
+    res.send(400, { message: 'No fid' });
+    return;
+  }
+  var fid = Number(req.params.fid);
+  if (isNaN(fid)) {
+    console.log('> api.listChoices(): bad fid');
+    res.send(400, { message: 'Bad fid' });
+    return;
+  }
+  console.log('> api.listChoices(): ', fid);
+
+  var choices = database.getChoices();
+  choices.listChoices(fid, function (err, items) {
+    console.log('> listChoices(callback): ', err);
+    choices.close();
+    if (err && typeof err !== 'array') {
+      console.log('choices.listChoices() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! items)
+      items = err;
+
+    console.log('> choices = ', items);
+    res.json(200, items);
+  });
+};
+
+/** data **/
+// Get datastream values from phant
+function getSensorValues(publicKey, callback) {
+  var urlOpts = {
+    host: 'localhost',
+    path: '/output/' + publicKey + '.json' + '?page=1',
+    port: 8080
+  };
+  console.log('getSensorValues() from ', urlOpts, publicKey);
+
+  http.get(urlOpts, function (res) {
+    var data = '';
+    res.on('data', function (chunk) {
+      data += chunk;
+    }).on('end', function () {
+      var s = data.toString();
+      var jsonData = JSON.parse(s);
+      console.log('getSensorValues(): ', s);
+      if (jsonData['success'] === false) {
+        callback('can not get datastream', undefined);   // datastream not found
+        return;
+      }
+
+      callback(null, jsonData);
+    });
+  });
 }
 
+api.getData = function(req, res) {
+  if (! req.params.did) {
+    console.log('> api.getData(): no did');
+    res.send(400, { message: 'No did' });
+    return;
+  }
+  var did = req.params.did;
+  if (! req.params.sid) {
+    console.log('> api.getData(): no sid');
+    res.send(400, { message: 'No sid' });
+    return;
+  }
+  var sid = req.params.sid;
+  console.log('> api.getData(): ', did, sid);
 
+  getSensorValues(did, function (err, items) {
+    console.log('> getSensorValues(callback): ', err);
+    if (err && typeof err !== 'array') {
+      console.log('data.SensorValues() error: ', err);
+      res.send(500, { message: 'Internal error' });
+      return;
+    }
+    if (! items)
+      items = err;
+    console.log('> items = ', items);
+
+    var data = [];
+    for (var i = 0; i < items.length; i++) {
+      var d = new Date();
+      var item = [ Date.parse(items[i].timestamp), Number(items[i][sid]) ];
+      data.push(item);
+    }
+    console.log('> data = ', [data]);
+
+    res.send(200, [data]);
+  });
+};
+
+// -END-

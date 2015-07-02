@@ -1,17 +1,17 @@
 extends layout
 
 block content
-    #page_field(data-role='page', data-transition='flip')    
-      div(data-role='header', data-position='fixed', data-theme='d')
-        a(data-role='button', data-rel='back', data-icon='back') 戻る
-        h1=fname 
+    #page_field(data-role='page', fname=fname, fieldID=fieldID)    
+      div(data-role='header', data-position='fixed', data-theme='d' )
+        a(href='/home', data-role='button', data-icon='back') 戻る
+        h1#field_title 圃場情報
         a(href='/fieldInfo', data-icon='info') 情報
 
       div(data-role='content')
         div(data-role='fieldcontain')
           label
             b 環境情報：
-          ul#fieldData-listview(data-role='listview', data-inset='true', data-divider-theme='d', fieldID=fieldID)
+          ul#fieldData-listview(data-role='listview', data-inset='true', data-divider-theme='d')
 
       div(data-role='footer', data-position='fixed', data-theme='d')
         div(data-role='navbar')
@@ -21,6 +21,6 @@ block content
             li
               a(data-icon='flat-cmd', href='/remocon') リモコン
             li
-              a(data-icon='flat-mail', href='/alertLis') 監視
+              a(data-icon='flat-mail', href='/alertList') 監視
             li
               a(data-icon='flat-bubble', href='/help') ヘルプ
