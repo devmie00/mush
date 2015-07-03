@@ -2,6 +2,7 @@
 //  mush.js -- 
 //
 
+
 (function () {
 
  // ------------------
@@ -202,6 +203,9 @@
  // ------------------
   $(document).on("pagebeforeshow", "#page_fieldInfo", function(event) {
 
+	pre_dateFormat = new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+ 	post_dateFormat = new DateFormat("yyyy-MM-dd");	
+
     // リストビューの内容をクリアする
     $('#info-listview').empty();
       
@@ -209,6 +213,9 @@
     var fid = $('#info-listview').attr('fid');
     $.getJSON('/api/fields/' + fid, null, function (info) {
       //document.querySelector('h1').innerHTML=fname;
+      var f_date = pre_dateFormat.parse(info.date);
+      var f_str = post_dateFormat.format(f_date);
+      
       // 取得した項目をリストビューに追加していく
       $('#info-listview').append('<li><h3>圃場名</h3><p>' + info.name + '</p></li>');
       $('#info-listview').append('<li data-icon="star">'
@@ -218,8 +225,8 @@
       $('#info-listview').append('<li data-icon="check">'
       	+ '<a href="tel:' + info.contact + '" class="ui-btn-icon-right"><h3>連絡先</h3>' 
        	+ '<p>' + info.contact + '</p></a></li>');
-      $('#info-listview').append('<li><h3>モニタ対象</h3><p>' + info.usage + '</p></li>');                              
-      $('#info-listview').append('<li><h3>モニタ開始日</h3><p>' + info.date +  '</p></li>');
+      $('#info-listview').append('<li><h3>モニタ対象</h3><p>' + info.usage + '</p></li>');   
+      $('#info-listview').append('<li><h3>モニタ開始日</h3><p>' + f_str +  '</p></li>');
       $('#info-listview').append('<li><h3>備考</h3><p>' + info.note + '</p></li>');          
      	// ヘッダに値をセット
      	document.querySelector('#fname_title').innerHTML=info.name;
