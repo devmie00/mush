@@ -88,7 +88,7 @@ app.get('/photoList', loginCheck, server.photoList);
 app.get('/diaryList', loginCheck, server.diaries);
 app.get('/diary/:yid', loginCheck, server.diary);
 app.get('/diary/create', loginCheck, server.diary_create);
-//app.post('/diary.post/:fid', server.diary.post);
+app.post('/diary.post/:yid?', server.diary.post);
 
 //--remocon
 app.get('/remocon', loginCheck, server.remocon);

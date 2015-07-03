@@ -330,6 +330,7 @@
     // choice情報の取得
     var myselect = $("#work_choice1");
     myselect.empty();
+    myselect.append($('<option>').html('作業を選択してください').val(null));
     $.getJSON('/api/fields/' + fid +'/choices', null, function (workList) {
       for (var i = 0; i < workList.length; i++) {
 		    myselect.append($('<option>').html(workList[i].label).val(workList[i].code));

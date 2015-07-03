@@ -201,9 +201,9 @@ api.listDiaries = function(req, res) {
   }
 
   var body = [
-    { "yid": 100, "fid": fid, "date": "2015-06-06T10:30:00.000Z", "uid": 20, "work": "農薬散布", "content": "云たら農薬を30L", "memo": "暑い一日", "pid": 0 },
-    { "yid": 101, "fid": fid, "date": "2015-06-07T15:00:00.000Z", "uid": 20, "work": "農薬散布", "content": "云たら農薬2を10L", "memo": "寒い一日", "pid": 0 },
-    { "yid": 102, "fid": fid, "date": "2015-06-08T06:00:00.000Z", "uid": 20, "work": "雑草取り", "content": "沢山とったで", "memo": "長い一日", "pid": 0 }
+    { "yid": 100, "fid": fid, "date": "2015-06-06T10:30:00.000Z", "uid": 20, "work": 1, "content": "云たら農薬を30L", "memo": "暑い一日", "pid": 0 },
+    { "yid": 101, "fid": fid, "date": "2015-06-07T15:00:00.000Z", "uid": 20, "work": 1, "content": "云たら農薬2を10L", "memo": "寒い一日", "pid": 0 },
+    { "yid": 102, "fid": fid, "date": "2015-06-08T06:00:00.000Z", "uid": 20, "work": 4, "content": "沢山とったで", "memo": "長い一日", "pid": 0 }
   ];
   res.send(200, body);
   return;
@@ -392,12 +392,12 @@ api.deleteAlert = function(req, res) {
 api.listChoices = function(req, res) {
   console.log('> api.getWorkChoice(): ');
   var body = [ 
- 	{"code":"1", "label":"農薬散布" },
-	{"code":"2", "label":"水やり" },
-	{"code":"3","label":"収穫"},
-	{"code":"4","label":"草取り"},
-	{"code":"5","label":"見回り"},
-	{"code":"6","label":"その他"}
+ 	{"code":1, "label":"農薬散布" },
+	{"code":2, "label":"水やり" },
+	{"code":3,"label":"収穫"},
+	{"code":4,"label":"草取り"},
+	{"code":5,"label":"見回り"},
+	{"code":6,"label":"その他"}
   ];
   
   res.send(200, body);

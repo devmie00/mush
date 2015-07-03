@@ -12,57 +12,57 @@ block content
 
       .ui-content(role='main')
         if yid
-          - console.log('> in diary.jade update:' + yid)
           // 更新
-          form(action='/api/diaries/' + yid, method='post')
-          div(data-role='fieldcontain')          
-           label(for='input_date') 日付:
+          //form(action='/api/diaries/' + yid, method='post')
+          - console.log('> in diary.jade update2:' + yid)          
+          form(action='/diary.post/' + yid, method='post', data-ajax='false' ) 
+            div(data-role='fieldcontain')  
+              label(for='input_date') 日付:
                -var today = new Date();
                -var mm = ("0"+(today.getMonth()+1)).slice(-2);
                -var dd = ("0"+(today.getDate()+1)).slice(-2);
                -var today_str = [today.getFullYear(), mm , dd].join('-');   
-           input#input_date(type='date', name='input_date', value=today_str, data-role='datebox', data-options='{"mode":"calbox","themeDate":"c" }')
-           input#yid(type='hidden' ,name='yid')            
-          div(data-role='fieldcontain')
-            label(for='writer') 登録者:
-            textarea.input-block-level(id='writer', name='writer') 
-          p
-          div(data-role='fieldcontain')
-            label.select(for='work_choice1') 作業:
-            select#work_choice1(name='work_choice1', data-native-menu='false')
-              option 作業を選択してください
-           p
-           div(data-role='fieldcontain')
-            label(for='content') 内容:
-            textarea.input-block-level(id='content', name='content') 
-           div(data-role='fieldcontain')
-            label(for='memo') 補足:
-            textarea.input-block-level(id='memo', name='memo' )
-          input#diary-submit(type='submit', value='更新', data-theme='a') 
+              input#input_date(type='date', name='input_date', value=today_str, data-role='datebox', data-options='{"mode":"calbox","themeDate":"c" }')
+              input#yid(type='hidden' ,name='yid')            
+            div(data-role='fieldcontain')
+              label(for='writer') 登録者:
+              textarea.input-block-level(id='writer', name='writer' , readonly='readonly')
+            div(data-role='fieldcontain')
+              label.select(for='work_choice1') 作業:
+              select#work_choice1(name='work_choice1', required='required')
+                option 作業を選択してください
+            div(data-role='fieldcontain')
+              label(for='content') 内容:
+              textarea.input-block-level(id='content', name='content', required='required')
+            div(data-role='fieldcontain')
+              label(for='memo') 補足:
+              textarea.input-block-level(id='memo', name='memo' )
+            input#diary-submit(type='submit', value='更新', data-theme='a') 
         else
           // 新規登録
           - console.log('> in diary.jade new:' + yid)
-          form(action='/api/fields/diaries', method='put', data-ajax='false')
-          div(data-role='fieldcontain')          
-           label(for='input_date') 日付:
+          //form(action='/api/fields/diaries', method='put', data-ajax='false')
+          form(action='/diary.post' , method='post', data-ajax='false')                    
+            div(data-role='fieldcontain')          
+              label(for='input_date') 日付:
                -var today = new Date();
                -var mm = ("0"+(today.getMonth()+1)).slice(-2);
                -var dd = ("0"+(today.getDate()+1)).slice(-2);
                -var today_str = [today.getFullYear(), mm , dd].join('-');   
-           input#input_date(type='date', name='input_date', value=today_str,
-	       data-role='datebox', data-options='{"mode":"calbox","themeDate":"c" }')
-           input#yid(type='hidden' ,name='yid')      
-          div(data-role='fieldcontain')
-            label.select(for='work_choice1') 作業:
-            select#work_choice1(name='work_choice1', data-native-menu='false')
-              option 作業を選択してください
-          div(data-role='fieldcontain')
-            label(for='content') 内容:
-            textarea.input-block-level(id='content', name='content' ) 
-          div(data-role='fieldcontain')
-            label(for='memo') 補足:
-            textarea.input-block-level(id='memo', name='memo')
-          input#diary-submit(type='submit', value='登録', data-theme='a') 
+              input#input_date(type='date', name='input_date', required='', value=today_str,
+	          data-role='datebox', data-options='{"mode":"calbox","themeDate":"c" }')
+              input#yid(type='hidden' ,name='yid')      
+            div(data-role='fieldcontain')
+              label.select(for='work_choice1') 作業:
+              select#work_choice1(name='work_choice1', required='required')
+                option 作業を選択してください
+            div(data-role='fieldcontain')
+              label(for='content') 内容:
+              textarea.input-block-level(id='content', name='content', val=null, required='required')
+            div(data-role='fieldcontain')
+              label(for='memo') 補足:
+              textarea.input-block-level(id='memo', name='memo')
+            input#diary-submit(type='submit', value='登録', data-theme='a') 
 
     //-
       div(data-role='footer', data-position='fixed', data-theme='d')
