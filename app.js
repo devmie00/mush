@@ -69,38 +69,38 @@ var loginCheck = function(req, res, next) {
 };
 
 //-- Front end --
+//-- Front end --
 app.get('/', loginCheck, routes.index);
 app.get('/login', server.login);
 app.post('/login.post', server.login.post);
 app.get('/home', loginCheck, server.home);
-app.get('/setting', server.setting);
+app.get('/setting', loginCheck, server.setting);
 
 app.get('/help', server.help);
-app.get('/fieldData/:fid/:fname', server.fieldData);
-
-app.get('/fieldGraph/:did/:sid/:unit', server.fieldGraph);	
-app.get('/graphSetting', server.graphSetting);
-app.get('/fieldMap/:location', server.fieldMap); 
-app.get('/photoList', server.photoList);
+app.get('/fieldData/:fid/:fname?', loginCheck, server.fieldData);
+app.get('/fieldGraph/:did/:sid/:unit', loginCheck, server.fieldGraph);	
+//app.get('/graphSetting/:did/:sid/:fname', server.graphSetting);
+app.get('/graphSetting', loginCheck, server.graphSetting);
+app.get('/fieldMap/:location', loginCheck, server.fieldMap); 
+app.get('/photoList', loginCheck, server.photoList);
 
 // Menu
-app.get('/diaryList', server.diaries);
-app.get('/diary/:yid', server.diary);
-app.get('/diary/create', server.diary_create);
-app.post('/diary.post', server.diary.post);
+app.get('/diaryList', loginCheck, server.diaries);
+app.get('/diary/:yid', loginCheck, server.diary);
+app.get('/diary/create', loginCheck, server.diary_create);
+//app.post('/diary.post/:fid', server.diary.post);
 
+//--remocon
+app.get('/remocon', loginCheck, server.remocon);
+app.get('/remoconConfirm', loginCheck, server.remoconConfirm);
+//--alert
+app.get('/alertList', loginCheck, server.alerts);
+app.get('/alert/:aid', loginCheck, server.alert);
+app.get('/alert/create', loginCheck, server.alert_create);
+app.post('/alert.post', loginCheck, server.alert.post);
 //--
-app.get('/remocon', server.remocon);
-app.get('/remoconConfirm', server.remoconConfirm);
-//--
-app.get('/alertList', server.alerts);
+app.get('/fieldInfo', loginCheck, server.fieldInfo);
 
-app.get('/alert/:aid', server.alert);
-app.get('/alert/create', server.alert_create);
-app.post('/alert.post', server.alert.post);
-
-//--
-app.get('/fieldInfo', server.fieldInfo);
 
 //-- Web API --
   // fields
@@ -115,6 +115,7 @@ app.get(apiBasePath + '/data/:did/:sid', api.getData);
 app.get(apiBasePath + '/fields/:fid/diaries', api.listDiaries);
 app.get(apiBasePath + '/diaries/:yid', api.getDiary);
 app.put(apiBasePath + '/fields/:fid/diaries', api.createDiary);
+app.post(apiBasePath + '/diaries/:yid', api.updateDiary);
 app.delete(apiBasePath + '/diaries/:yid', api.removeDiary);
   // alerts
 app.get(apiBasePath + '/fields/:fid/alerts', api.listAlerts);

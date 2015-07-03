@@ -2,9 +2,9 @@ extends layout
 
 block content
     // 監視条件登録
-    #page_alert(data-role='page')
+    #page_alert(data-role='page', aid=aid, fid=fid)
       div(data-role='header', data-position='fixed', data-theme='d')
-        a(data-role='button', data-rel='back', data-icon='back') キャンセル
+        a(href='/alertList' , data-role='button', data-rel='back', data-icon='back') キャンセル
         h1 監視条件
 
       .ui-content(role='main')
